@@ -1,8 +1,9 @@
 import { ToDo, IToDo } from '../models/todo';
 import { Request, Response } from 'express';
 import * as util from '../utils/utils';
+import { IUser } from '../models/user';
 
-export const deleteTodo = (req: Request, res: Response) => {
+export const deleteTodo = (req: Request, res: Response): void => {
   const body = req.body;
 
   ToDo.findByIdAndDelete({ _id: body.id })
@@ -10,6 +11,11 @@ export const deleteTodo = (req: Request, res: Response) => {
       if (!toDo)
         return res.status(404).json({ error: 'no to do with that id found' });
 
+      util.agenda
+        .cancel({ name: 'to do reminder', toDoID: toDo.id })
+        .catch(error => {
+          res.status(500).json(error);
+        });
       res.status(200).json({ message: 'deleted successfully' });
     })
     .catch(error => {
@@ -17,8 +23,13 @@ export const deleteTodo = (req: Request, res: Response) => {
     });
 };
 
-export const createToDo = async (req: Request, res: Response) => {
+export const createToDo = async (
+  req: Request,
+  res: Response,
+): Promise<Response | undefined> => {
   const body: IToDo = req.body;
+  const user: IUser = res.locals.userData;
+  body.userID = user._id ?? '';
 
   if (!body.userID || !body.task || !body.date || body.isRemind === undefined)
     return res.status(400).send({ error: 'bad request' });
@@ -30,23 +41,28 @@ export const createToDo = async (req: Request, res: Response) => {
       if (newToDo.isRemind) {
         try {
           util.agenda
-            .create('to do reminder', { id: newToDo.id })
+            .create('to do reminder', { toDoID: newToDo.id })
             .schedule(newToDo.date)
-            .unique({ id: newToDo.id })
+            .unique({ toDoID: newToDo.id })
             .save();
         } catch (error) {
-          console.log(error);
+          res.status(500).json(error);
         }
       }
-      res.status(201).json({ message: 'to do successfully created' });
+      return res.status(201).json({ message: 'to do successfully created' });
     })
     .catch(error => {
       res.status(500).json(error);
     });
 };
 
-export const updateToDo = (req: Request, res: Response) => {
-  const body = <IToDo>req.body;
+export const updateToDo = (
+  req: Request,
+  res: Response,
+): Response | undefined => {
+  const body: IToDo = req.body;
+  const user: IUser = res.locals.userData;
+  body.userID = user._id ?? '';
 
   if (
     !body._id ||
@@ -61,26 +77,21 @@ export const updateToDo = (req: Request, res: Response) => {
     .then(query => {
       if (!query)
         return res.status(404).json({ error: 'no to do with that id found' });
-      if (query.isRemind) {
+      if (body.isRemind) {
         try {
           util.agenda
-            .create('to do reminder', { id: query.id })
+            .create('to do reminder', { toDoID: body._id })
             .schedule(query.date)
-            .unique({ id: query.id })
+            .unique({ toDoID: body._id })
             .save();
         } catch (error) {
-          console.log(error);
+          res.status(500).json(error);
         }
       } else {
         util.agenda
-          .jobs({ name: 'to do reminder', id: query.id })
-          .then(jobs => {
-            if (jobs[0]) {
-              jobs[0].remove();
-            }
-          })
+          .cancel({ name: 'to do reminder', toDoID: body._id })
           .catch(error => {
-            console.log(error);
+            res.status(500).json(error);
           });
       }
 
@@ -91,10 +102,14 @@ export const updateToDo = (req: Request, res: Response) => {
     });
 };
 
-export const getToDos = (req: Request, res: Response) => {
-  const body = req.query;
+export const getToDos = (req: Request, res: Response): void => {
+  const user: IUser = res.locals.userData;
+  const toDoProjection = {
+    __v: false,
+    userID: false,
+  };
 
-  ToDo.find({ userID: body.userID })
+  ToDo.find({ userID: user._id }, toDoProjection)
     .then(toDos => {
       res.status(200).json({ toDos: toDos });
     })

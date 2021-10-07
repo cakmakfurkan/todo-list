@@ -2,11 +2,10 @@ import { User, IUser } from '../models/user';
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import { generateToken } from '../utils/utils';
-import { agenda } from '../utils/agenda';
 
 const rounds = 10;
 
-export const login = (req: Request, res: Response) => {
+export const login = (req: Request, res: Response): void => {
   User.findOne({ email: req.body.email })
     .then(user => {
       if (!user)
@@ -31,7 +30,7 @@ export const login = (req: Request, res: Response) => {
     });
 };
 
-export const logout = (req: Request, res: Response) => {
+export const logout = (req: Request, res: Response): void => {
   res
     .cookie('token', '', {
       httpOnly: true,
@@ -41,17 +40,13 @@ export const logout = (req: Request, res: Response) => {
     .json({ message: 'logout is successful' });
 };
 
-export const createUser = (req: Request, res: Response) => {
-  const body = req.body;
+export const createUser = (
+  req: Request,
+  res: Response,
+): Response | undefined => {
+  const body: IUser = req.body;
 
-  if (
-    !body.email ||
-    !body.password ||
-    !body.name ||
-    !body.permissions ||
-    !body.authorizedAreas ||
-    !body.role
-  )
+  if (!body.email || !body.password || !body.name)
     return res.status(400).json({ error: 'bad request' });
 
   User.findOne({ email: body.email })
@@ -66,7 +61,7 @@ export const createUser = (req: Request, res: Response) => {
         const newUser: IUser = await User.create(body);
         newUser
           .save()
-          .then(user => {
+          .then(() => {
             res.status(201).json({ message: 'user successfully created' });
           })
           .catch(error => {
@@ -79,36 +74,16 @@ export const createUser = (req: Request, res: Response) => {
     });
 };
 
-export const updateUserPassword = (req: Request, res: Response) => {
-  const body = req.body;
-
-  if (!body.email || !body.newPassword)
-    return res.status(400).json({ error: 'bad request' });
-
-  User.findOne({ email: body.email, systemID: body.systemID }).then(user => {
-    if (!user) return res.status(404).json({ error: 'user not found' });
-
-    bcrypt.hash(body.newPassword, rounds, async (error, hash) => {
-      if (error) return res.status(500).json(error);
-
-      User.findOneAndUpdate({ email: body.email }, { password: hash }).then(
-        user => {
-          if (!user) return res.status(404).json({ error: 'user not found' });
-
-          res.status(200).json({ message: 'password is successfully updated' });
-        },
-      );
-    });
-  });
-};
-
-export const updatePassword = (req: Request, res: Response) => {
+export const updatePassword = (
+  req: Request,
+  res: Response,
+): Response | undefined => {
   const body = req.body;
 
   if (!body.email || !body.oldPassword || !body.newPassword)
     return res.status(400).json({ error: 'bad request' });
 
-  User.findOne({ email: body.email, systemID: body.systemID }).then(user => {
+  User.findOne({ email: body.email }).then(user => {
     if (!user) return res.status(404).json({ error: 'user not found' });
 
     bcrypt.compare(body.oldPassword, user.password, (error, match) => {
@@ -120,7 +95,6 @@ export const updatePassword = (req: Request, res: Response) => {
           User.findOneAndUpdate(
             {
               email: body.email,
-              systemID: body.systemID,
             },
             { password: hash },
           ).then(user => {
@@ -128,7 +102,7 @@ export const updatePassword = (req: Request, res: Response) => {
 
             res
               .status(200)
-              .json({ message: 'password is succesfully updated' });
+              .json({ message: 'password is successfully updated' });
           });
         });
       else res.status(403).json({ error: 'passwords do not match' });
@@ -136,76 +110,15 @@ export const updatePassword = (req: Request, res: Response) => {
   });
 };
 
-export const deleteUser = (req: Request, res: Response) => {
-  const body = req.body;
-
-  if (!body.email) return res.status(400).json({ error: 'bad request' });
+export const deleteUser = (req: Request, res: Response): void => {
+  const user: IUser = res.locals.userData;
 
   User.findByIdAndDelete({
-    email: body.email,
-    systemID: body.systemID,
+    _id: user._id,
   })
     .then(result => {
       if (!result) return res.status(404).json({ error: 'user not found' });
-
       res.status(200).json({ message: 'user is successfully deleted' });
-    })
-    .catch(error => {
-      res.status(500).json({ error: error });
-    });
-};
-
-export const updateUserPermissions = (req: Request, res: Response) => {
-  const body = req.body;
-
-  if (!body.email || !body.permissions)
-    return res.status(400).json({ error: 'bad request' });
-
-  User.findOneAndUpdate(
-    {
-      email: body.email,
-      systemID: body.systemID,
-    },
-    {
-      permissions: body.permissions,
-    },
-  )
-    .then(response => {
-      if (!response) return res.status(404).json({ error: 'user not found' });
-
-      res.status(200).json({ message: 'user is successfully updated' });
-    })
-    .catch(error => {
-      res.status(500).json({ error: error });
-    });
-};
-
-export const getUsers = (req: Request, res: Response) => {
-  const usersProjection = {
-    __v: false,
-    _id: false,
-    password: false,
-  };
-
-  User.find({ systemID: req.query.systemID }, usersProjection)
-    .then(users => {
-      res.status(200).json({ users: users });
-    })
-    .catch(error => {
-      res.status(500).json({ error: error });
-    });
-};
-
-export const getAllUsers = (req: Request, res: Response) => {
-  const usersProjection = {
-    __v: false,
-    _id: false,
-    password: false,
-  };
-
-  User.find({}, usersProjection)
-    .then(users => {
-      res.status(200).json({ users: users });
     })
     .catch(error => {
       res.status(500).json({ error: error });

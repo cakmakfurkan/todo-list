@@ -1,7 +1,7 @@
 import { Schema, model, Document, Model } from 'mongoose';
 
 export interface IToDo extends Document {
-  _id: string;
+  _id?: string;
   userID: string;
   task: string;
   date: Date;
