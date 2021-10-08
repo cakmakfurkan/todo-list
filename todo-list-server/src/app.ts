@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import express from 'express';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import { router as authRouter } from './routes/auth';
 import { router as todoRouter } from './routes/todo';
 import { handleJSONParseError } from './utils/utils';
@@ -11,6 +12,7 @@ const app = express();
 const dbURI = 'mongodb://127.0.0.1/todo-list';
 
 app.use(express.json());
+app.use(cors());
 app.use(handleJSONParseError);
 app.use(cookieParser());
 app.use('/api/auth', authRouter);
