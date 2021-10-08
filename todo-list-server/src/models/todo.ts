@@ -11,8 +11,8 @@ export interface IToDo extends Document {
 
 const schema: Schema = new Schema({
   userID: {
-    type: String,
-    required: true,
+    type: Schema.Types.ObjectId,
+    ref: 'User',
   },
   task: {
     type: String,
