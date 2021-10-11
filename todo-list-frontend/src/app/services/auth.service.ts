@@ -13,5 +13,13 @@ export class AuthService {
   login(data: any): Observable<any> {
     return this.http.post(`${apiURL}auth/login`, data, {withCredentials: true});
   }
+
+  signUp(data: any): Observable<any> {
+    return this.http.post(`${apiURL}auth/createUser`, data, {withCredentials: true});
+  }
+
+  logout(): Observable<any> {
+    return this.http.get(`${apiURL}auth/logout`, {withCredentials: true})
+  }
 }
 

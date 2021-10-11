@@ -10,17 +10,69 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TodoComponent } from './components/todo/todo.component';
-import { CookieModule } from 'ngx-cookie';
+import { SignupComponent } from './components/signup/signup.component';
+import { NotifierModule, NotifierOptions } from 'angular-notifier';
+import { TaskItemComponent } from './components/task-item/task-item.component';
+import { TasksComponent } from './components/tasks/tasks.component';
+
+
+/**
+ * Custom angular notifier options
+ */
+const customNotifierOptions: NotifierOptions = {
+  position: {
+    horizontal: {
+      position: 'right',
+      distance: 12,
+    },
+    vertical: {
+      position: 'top',
+      distance: 12,
+      gap: 10,
+    },
+  },
+  theme: 'material',
+  behaviour: {
+    autoHide: 2000,
+    onClick: 'hide',
+    onMouseover: 'pauseAutoHide',
+    showDismissButton: true,
+    stacking: 4,
+  },
+  animations: {
+    enabled: true,
+    show: {
+      preset: 'slide',
+      speed: 300,
+      easing: 'ease',
+    },
+    hide: {
+      preset: 'fade',
+      speed: 300,
+      easing: 'ease',
+      offset: 50,
+    },
+    shift: {
+      speed: 300,
+      easing: 'ease',
+    },
+    overlap: 150,
+  },
+};
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    TodoComponent
+    TodoComponent,
+    SignupComponent,
+    TaskItemComponent,
+    TasksComponent
   ],
   imports: [
     BrowserModule,
@@ -32,10 +84,11 @@ import { CookieModule } from 'ngx-cookie';
     MatButtonModule,
     MatCardModule,
     MatToolbarModule,
+    MatIconModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    CookieModule.forRoot()
+    NotifierModule.withConfig(customNotifierOptions),
   ],
   providers: [],
   bootstrap: [AppComponent]

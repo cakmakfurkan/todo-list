@@ -1,1 +1,16 @@
-<p>todo works!</p>
+<div fxLayoutAlign="center center" fxFlexFill>
+  <mat-card fxLayoutAlign="top center" fxFlex="95" fxLayout="column" style="height: 95%;">
+    <div fxLayout="row" fxLayoutAlign="space-between center" style="width: 100%;" >
+      <button mat-raised-button color="primary" (click)="onLogout()">
+        <mat-icon aria-hidden="false">logout</mat-icon>
+      </button>
+      <h1>Task List</h1>
+      <button mat-raised-button color="primary" type="submit">
+        <mat-icon aria-hidden="false">add</mat-icon>
+      </button>
+    </div>
+    <div class="separator"></div>
+    <app-tasks></app-tasks>
+  </mat-card>
+</div>
+<notifier-container></notifier-container>

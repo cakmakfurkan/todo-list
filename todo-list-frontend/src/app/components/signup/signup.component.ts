@@ -5,35 +5,33 @@ import { Router } from '@angular/router';
 import { NotifierService } from 'angular-notifier';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  selector: 'app-signup',
+  templateUrl: './signup.component.html',
+  styleUrls: ['./signup.component.css']
 })
-export class LoginComponent implements OnInit {
+export class SignupComponent implements OnInit {
   formGroup: FormGroup = new FormGroup({
+      name: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required]),
     });
 
   constructor(private authService: AuthService, private router: Router, private notifierService: NotifierService) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+  }
 
-  loginProcess() {
+  signUpProcess() {
     if(this.formGroup.valid) {
-      this.authService.login(this.formGroup.value).subscribe(
-        (data) => { 
+      this.authService.signUp(this.formGroup.value).subscribe(
+        (data: any) => { 
           this.notifierService.notify('success', 'Welcome!');
           setTimeout(() => {
-            this.router.navigate(['/todo']);
+            this.router.navigate(['/login']);
           }, 1500);
         },
-        (err) => {
-          if(err.status === 404 || err.status === 403) {
-            this.notifierService.notify('error', 'Username or Password are invalid!');
-          } else {
-            this.notifierService.notify('error', `Something went wrong! Error: ${err.statusText}`);
-          }
+        (err: any) => {
+          this.notifierService.notify('error', `Something went wrong! Error: ${err.statusText}`);
         }
       )
     }
