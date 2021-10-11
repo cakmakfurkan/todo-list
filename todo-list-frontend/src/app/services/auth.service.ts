@@ -6,12 +6,12 @@ import { apiURL } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthServiceService {
+export class AuthService {
 
   constructor(private http:HttpClient) { }
 
   login(data: any): Observable<any> {
-    return this.http.post(`${apiURL}auth/login`, data);
+    return this.http.post(`${apiURL}auth/login`, data, {withCredentials: true});
   }
 }
 

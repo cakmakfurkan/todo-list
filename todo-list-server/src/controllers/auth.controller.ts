@@ -13,15 +13,19 @@ export const login = (req: Request, res: Response): void => {
       else {
         bcrypt.compare(req.body.password, user.password, (error, match) => {
           if (error) res.status(500).json(error);
-          else if (match)
+          else if (match) {
+            user.password = '';
             res
               .cookie('token', generateToken(user), {
+                //domain: '.localhost',
                 httpOnly: true,
                 expires: new Date(Date.now() + 24 * 60 * 60 * 1000), //24 hour
               })
               .status(201)
               .json({ message: 'login is successful' });
-          else res.status(403).json({ error: 'passwords do not match' });
+          } else {
+            res.status(403).json({ error: 'passwords do not match' });
+          }
         });
       }
     })

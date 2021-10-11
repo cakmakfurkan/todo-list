@@ -12,7 +12,7 @@ const app = express();
 const dbURI = 'mongodb://127.0.0.1/todo-list';
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({ credentials: true, origin: 'http://localhost:4200' }));
 app.use(handleJSONParseError);
 app.use(cookieParser());
 app.use('/api/auth', authRouter);
