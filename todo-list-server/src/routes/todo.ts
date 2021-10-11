@@ -10,7 +10,7 @@ import restrict from '../middlewares/middleware';
 
 router.post('/create', restrict, createToDo);
 
-router.delete('/delete', restrict, deleteTodo);
+router.post('/delete', restrict, deleteTodo);
 
 router.put('/update', restrict, updateToDo);
 

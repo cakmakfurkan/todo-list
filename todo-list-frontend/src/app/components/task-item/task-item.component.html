@@ -1,1 +1,16 @@
-<p>{{task.task}}</p>
+<mat-card 
+    fxLayoutAlign="space-between left"
+    fxLayout="row" 
+    [ngClass]="{reminder: task.isRemind}" 
+    class="task-item"
+    (dblclick)="onToggle(task)"
+>
+    <div fxLayout="column">
+        <h2>{{task.task}}</h2>
+        <p>{{task.date}}</p>
+    </div>
+    <mat-icon 
+        [ngStyle]="{color: 'red'}"
+        (click)="onDelete(task)"
+    >delete</mat-icon>
+</mat-card>

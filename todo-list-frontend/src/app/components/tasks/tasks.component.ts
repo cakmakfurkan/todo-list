@@ -31,4 +31,45 @@ export class TasksComponent implements OnInit {
     });
   }
 
+  deleteTask(task: Task) {
+    this.todoService.deleteToDo(task._id).subscribe(
+      (data) => {
+        this.notifierService.notify('success', 'Deleted Successfully!');
+        this.tasks = this.tasks.filter((t) => t._id !== task._id)
+      },
+      (err) => {
+        if(err.status === 401) {
+          this.notifierService.notify('error', 'Please Login!');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 1500);
+        } else if(err.status === 403) {
+          this.notifierService.notify('error', 'Task not Found!');
+        } else {
+          this.notifierService.notify('error', `Something went wrong! Error: ${err.statusText}`);
+        }
+      }
+    )
+  }
+
+  toggleReminder(task: Task) {
+    task.isRemind = !task.isRemind;
+    this.todoService.updateToDo(task).subscribe(
+      (data) => {
+        this.notifierService.notify('success', 'Updated Successfully!');
+      },
+      (err) => {
+        if(err.status === 401) {
+          this.notifierService.notify('error', 'Please Login!');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 1500);
+        } else if(err.status === 403) {
+          this.notifierService.notify('error', 'Task not Found!');
+        } else {
+          this.notifierService.notify('error', `Something went wrong! Error: ${err.statusText}`);
+        }
+      }
+    );
+  }
 }

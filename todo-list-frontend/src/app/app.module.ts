@@ -19,7 +19,7 @@ import { SignupComponent } from './components/signup/signup.component';
 import { NotifierModule, NotifierOptions } from 'angular-notifier';
 import { TaskItemComponent } from './components/task-item/task-item.component';
 import { TasksComponent } from './components/tasks/tasks.component';
-
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 /**
  * Custom angular notifier options
@@ -88,6 +88,7 @@ const customNotifierOptions: NotifierOptions = {
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
+    ScrollingModule,
     NotifierModule.withConfig(customNotifierOptions),
   ],
   providers: [],
