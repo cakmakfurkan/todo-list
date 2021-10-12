@@ -59,6 +59,7 @@ export class TasksComponent implements OnInit {
         this.notifierService.notify('success', 'Updated Successfully!');
       },
       (err) => {
+        task.isRemind = !task.isRemind;
         if(err.status === 401) {
           this.notifierService.notify('error', 'Please Login!');
           setTimeout(() => {

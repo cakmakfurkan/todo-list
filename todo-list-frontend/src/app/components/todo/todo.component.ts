@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class TodoComponent implements OnInit {
 
-  constructor(private todoService: TodoService, private router: Router, private authService: AuthService,  private notifierService: NotifierService) { }
+  constructor(private router: Router, private authService: AuthService,  private notifierService: NotifierService) { }
 
   ngOnInit(): void { }
 

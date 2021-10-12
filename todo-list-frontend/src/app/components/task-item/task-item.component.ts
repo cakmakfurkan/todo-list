@@ -1,8 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Task } from '../../Task';
-import { TodoService } from 'src/app/services/todo.service';
-import { Router } from '@angular/router';
-import { NotifierService } from 'angular-notifier';
 @Component({
   selector: 'app-task-item',
   templateUrl: './task-item.component.html',
@@ -12,8 +9,9 @@ export class TaskItemComponent implements OnInit {
   @Input() task: Task;
   @Output() onDeleteTask: EventEmitter<Task> = new EventEmitter();
   @Output() onToggleReminder: EventEmitter<Task> = new EventEmitter();
+  @Output() formattedDate: string = '';
 
-  constructor(private todoService: TodoService, private router: Router, private notifierService: NotifierService) { 
+  constructor() {
     this.task = {
       _id: "",
       userID: "",
@@ -22,6 +20,7 @@ export class TaskItemComponent implements OnInit {
       isRemind: false,
       createdAt: new Date()
     }
+    this.formattedDate = this.task.date.toUTCString();
   }
 
   ngOnInit(): void {

@@ -18,7 +18,7 @@ export const login = (req: Request, res: Response): void => {
             res
               .cookie('token', generateToken(user), {
                 //domain: '.localhost',
-                httpOnly: true,
+                httpOnly: false,
                 expires: new Date(Date.now() + 24 * 60 * 60 * 1000), //24 hour
               })
               .status(201)
@@ -37,7 +37,7 @@ export const login = (req: Request, res: Response): void => {
 export const logout = (req: Request, res: Response): void => {
   res
     .cookie('token', '', {
-      httpOnly: true,
+      httpOnly: false,
       expires: new Date(Date.now() + 24 * 60 * 60 * 1000), //24 hour
     })
     .status(200)

@@ -1,5 +1,6 @@
 <cdk-virtual-scroll-viewport appendOnly itemSize="50" style="height: 100%; width: 100%;" >
     <app-task-item
+        fxLayoutAlign="center center" 
         class="task-item"
         *ngFor="let task of tasks"
         [task]="task"

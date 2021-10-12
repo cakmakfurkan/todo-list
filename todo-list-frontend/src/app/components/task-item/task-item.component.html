@@ -3,11 +3,13 @@
     fxLayout="row" 
     [ngClass]="{reminder: task.isRemind}" 
     class="task-item"
+    fxFlex="98"
     (dblclick)="onToggle(task)"
+    [class.mat-elevation-z4]=true
 >
     <div fxLayout="column">
         <h2>{{task.task}}</h2>
-        <p>{{task.date}}</p>
+        <p>{{formattedDate}}</p>
     </div>
     <mat-icon 
         [ngStyle]="{color: 'red'}"
