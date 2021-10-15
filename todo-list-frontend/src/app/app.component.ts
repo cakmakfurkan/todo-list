@@ -8,9 +8,9 @@ import {Location} from '@angular/common';
 })
 export class AppComponent {
     constructor(location: Location) {
-    if(this.checkCookies())
+    if(location.isCurrentPathEqualTo('/'))
       location.go('/todo');
-    else
+    if(!this.checkCookies() && location.isCurrentPathEqualTo('/todo'))
       location.go('/login');
   }
 
