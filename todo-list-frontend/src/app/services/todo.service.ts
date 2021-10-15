@@ -21,4 +21,8 @@ export class TodoService {
   updateToDo(task: Task): Observable<any> {
     return this.http.put(`${apiURL}todo/update`, task, {withCredentials: true});
   }
+
+  createToDo(task: Task): Observable<any> {
+    return this.http.post(`${apiURL}todo/create`, task, {withCredentials: true});
+  }
 }

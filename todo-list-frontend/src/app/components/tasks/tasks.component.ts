@@ -3,6 +3,7 @@ import { Task } from '../../Task';
 import { TodoService } from 'src/app/services/todo.service';
 import { Router } from '@angular/router';
 import { NotifierService } from 'angular-notifier';
+import { EventProxyService } from '../../services/event-proxy.service';
 
 @Component({
   selector: 'app-tasks',
@@ -12,9 +13,22 @@ import { NotifierService } from 'angular-notifier';
 export class TasksComponent implements OnInit {
   tasks: Task[] = [];
 
-  constructor(private todoService: TodoService, private router: Router, private notifierService: NotifierService) { }
+  constructor(
+    private todoService: TodoService,
+    private router: Router,
+    private notifierService: NotifierService,
+    private eventProxyService: EventProxyService) { }
 
   ngOnInit(): void {
+    this.getTasks();
+    this.eventProxyService.getEventSubject().subscribe((param: string) => {
+      if(param === 'getTasks'){
+        this.getTasks();
+      }
+    });
+  }
+
+  getTasks(): void {
     this.todoService.getToDos().subscribe(
       (data) => {
         this.tasks = data.toDos;

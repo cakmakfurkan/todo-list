@@ -14,13 +14,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TodoComponent } from './components/todo/todo.component';
+import { AddToDoDialog, TodoComponent } from './components/todo/todo.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { NotifierModule, NotifierOptions } from 'angular-notifier';
 import { TaskItemComponent } from './components/task-item/task-item.component';
 import { TasksComponent } from './components/tasks/tasks.component';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 /**
  * Custom angular notifier options
  */
@@ -72,26 +73,32 @@ const customNotifierOptions: NotifierOptions = {
     TodoComponent,
     SignupComponent,
     TaskItemComponent,
-    TasksComponent
+    TasksComponent,
+    AddToDoDialog
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     FlexLayoutModule,
+    MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatCardModule,
     MatToolbarModule,
     MatIconModule,
+    MatCheckboxModule,
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
     ScrollingModule,
     NotifierModule.withConfig(customNotifierOptions),
   ],
-  providers: [],
+  entryComponents: [
+    TodoComponent, 
+    AddToDoDialog
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

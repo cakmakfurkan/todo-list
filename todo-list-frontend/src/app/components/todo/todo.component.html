@@ -6,11 +6,11 @@
       </button>
       <h1>Task List</h1>
       <button mat-raised-button color="primary" type="submit">
-        <mat-icon aria-hidden="false">add</mat-icon>
+        <mat-icon aria-hidden="false" (click)="openDialog()">add</mat-icon>
       </button>
     </div>
     <div class="separator"></div>
-    <app-tasks style="width: 100%; height: 100%;"></app-tasks>
+    <app-tasks #tasks style="width: 100%; height: 100%;"></app-tasks>
   </mat-card>
 </div>
 <notifier-container></notifier-container>

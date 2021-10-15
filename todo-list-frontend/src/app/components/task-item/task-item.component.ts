@@ -20,10 +20,13 @@ export class TaskItemComponent implements OnInit {
       isRemind: false,
       createdAt: new Date()
     }
-    this.formattedDate = this.task.date.toUTCString();
   }
 
   ngOnInit(): void {
+
+  }
+  ngOnChanges(): void {
+    this.formattedDate = new Date(this.task.date).toUTCString();
   }
 
   onDelete(task: Task) {

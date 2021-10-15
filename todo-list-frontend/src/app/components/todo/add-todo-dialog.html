@@ -1,0 +1,18 @@
+<div mat-dialog-content>
+  <h1>Create Task</h1>
+  <div fxLayout="column">
+    <mat-form-field appearance="fill">
+      <mat-label>Task Name</mat-label>
+      <input matInput [(ngModel)]="data.task">
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Task Date</mat-label>
+      <input matInput type="datetime-local" placeholder="Task Date" [(ngModel)]="data.date">
+    </mat-form-field>
+    <mat-checkbox [(ngModel)]="data.isRemind">Be Reminded?</mat-checkbox>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Close</button>
+  <button mat-button cdkFocusInitial (click)="onCreateClick()">Create</button>
+</div>
