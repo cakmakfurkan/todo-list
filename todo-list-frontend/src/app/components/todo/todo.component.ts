@@ -44,10 +44,6 @@ export class TodoComponent implements OnInit {
       width: '80%',
       data: {task: '', date: new Date(), isRemind: false}
     });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed ', result);
-    });
   }
 }
 
@@ -69,7 +65,6 @@ export class AddToDoDialog {
   }
 
   onCreateClick(): void {
-    console.log(this.data);
     this.todoService.createToDo(this.data).subscribe(
       (data) => {
         this.notifierService.notify('success', 'Created Successfully!');
